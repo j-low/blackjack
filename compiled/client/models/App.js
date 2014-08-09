@@ -14,7 +14,34 @@
       var deck;
       this.set('deck', deck = new Deck());
       this.set('playerHand', deck.dealPlayer());
-      return this.set('dealerHand', deck.dealDealer());
+      this.set('dealerHand', deck.dealDealer());
+      this.set('winner', void 0);
+      this.get('playerHand').on('turnEnded', (function(_this) {
+        return function() {
+          console.log("turnEnded triggered by received by App model");
+          if ((_this.get('playerHand')).isBusted()) {
+            _this.set('winner', 'dealer');
+            if ((_this.get('dealerHand')).isBusted()) {
+              return _this.set('winner', 'player');
+            }
+          } else {
+            return _this.compareScores();
+          }
+        };
+      })(this));
+      this.get('dealerHand').on('turnEnded', function() {});
+      return this.on('change:winner', function() {
+        return alert("The winner is: " + (this.get('winner')) + " !!!!");
+      });
+    };
+
+    App.prototype.compareScores = function() {
+      console.log('compareScores called');
+      if ((this.get('playerHand')).handScore() > (this.get('dealerHand')).handScore()) {
+        return this.set('winner', 'player');
+      } else {
+        return this.set('winner', 'dealer');
+      }
     };
 
     return App;

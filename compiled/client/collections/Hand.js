@@ -15,11 +15,42 @@
     Hand.prototype.initialize = function(array, deck, isDealer) {
       this.deck = deck;
       this.isDealer = isDealer;
-      return this.set('isBusted', false);
+    };
+
+    Hand.prototype.isBusted = function() {
+      console.log('isBusted called');
+      if (this.handScore() > 21) {
+        return true;
+      }
+      return false;
+    };
+
+    Hand.prototype.handScore = function() {
+      if ((this.scores()[1] != null) && this.scores()[1] < 21) {
+        return this.scores()[1];
+      } else {
+        return this.scores()[0];
+      }
     };
 
     Hand.prototype.hit = function() {
-      return this.add(this.deck.pop()).last();
+      var hitCard;
+      console.log('hit called');
+      hitCard = this.add(this.deck.pop()).last();
+      if (this.isBusted()) {
+        this.trigger('turnEnded', this);
+        console.log('turnENded called due to bust in hit');
+      }
+      if (this.handScore() === 21) {
+        this.trigger('turnEnded', this);
+        console.log('turnENded called due to 21 in hit');
+      }
+      return hitCard;
+    };
+
+    Hand.prototype.stand = function() {
+      console.log('stand called');
+      return this.trigger('turnEnded', this);
     };
 
     Hand.prototype.scores = function() {
