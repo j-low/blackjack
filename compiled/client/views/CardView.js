@@ -10,9 +10,9 @@
       return CardView.__super__.constructor.apply(this, arguments);
     }
 
-    CardView.prototype.className = 'card';
+    CardView.prototype.tagName = 'img';
 
-    CardView.prototype.template = _.template('<%= rankName %> of <%= suitName %>');
+    CardView.prototype.className = 'card';
 
     CardView.prototype.initialize = function() {
       this.model.on('change', (function(_this) {
@@ -25,7 +25,9 @@
 
     CardView.prototype.render = function() {
       this.$el.children().detach().end().html;
-      this.$el.html(this.template(this.model.attributes));
+      if (!!this.model.get('revealed')) {
+        this.$el.attr('src', this.model.get('url'));
+      }
       if (!this.model.get('revealed')) {
         return this.$el.addClass('covered');
       }

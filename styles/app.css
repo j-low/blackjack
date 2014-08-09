@@ -1,14 +1,22 @@
+body {
+  background-image: url('../img/background.png');
+  background-size: 100%;
+  background-color: #cccccc;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
 .card {
   float: left;
-  border: solid 1px black;
   width: 100px;
   border-radius: 5px;
   height: 140px;
   margin-right: 20px;
+
 }
 
 .covered {
-  background-color: black;
+  background-image: url('../img/card_back.png');
 }
 
 .hand {

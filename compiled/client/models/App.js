@@ -16,7 +16,13 @@
       this.set('playerHand', deck.dealPlayer());
       this.set('dealerHand', deck.dealDealer());
       this.set('winner', void 0);
-      this.on;
+      this.get('playerHand').on('blackjack', (function(_this) {
+        return function() {
+          return setTimeout((function() {
+            return alert("you got blackjack! you're awesome!!");
+          }), 50);
+        };
+      })(this));
       this.get('playerHand').on('turnEnded', (function(_this) {
         return function() {
           if ((_this.get('playerHand')).isBusted()) {
@@ -26,9 +32,15 @@
           }
         };
       })(this));
+      this.get('playerHand').on('blackjack', (function(_this) {
+        return function() {
+          return setTimeout((function() {
+            return alert("dealer got blackjack! you suck!!");
+          }), 50);
+        };
+      })(this));
       this.get('dealerHand').on('turnEnded', (function(_this) {
         return function() {
-          console.log('dealer ends');
           if ((_this.get('dealerHand')).isBusted()) {
             return _this.set('winner', 'player');
           } else {
@@ -38,7 +50,9 @@
       })(this));
       return this.on('change:winner', (function(_this) {
         return function() {
-          return alert("The winner is: " + (_this.get('winner')) + " !!!!");
+          return setTimeout((function() {
+            return alert("The winner is: " + (_this.get('winner')) + " !!!!");
+          }), 50);
         };
       })(this));
     };

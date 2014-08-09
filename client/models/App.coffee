@@ -7,7 +7,9 @@ class window.App extends Backbone.Model
     @set 'dealerHand', deck.dealDealer()
     @set 'winner', undefined
 
-    @on
+    # player blackjack
+    @get('playerHand').on 'blackjack', =>
+      setTimeout (=> alert("you got blackjack! you're awesome!!")) , 50
 
     # PLAYER ENDED EVENT don't forget yo fatty arrows
     @get('playerHand').on 'turnEnded', =>
@@ -19,10 +21,12 @@ class window.App extends Backbone.Model
       else
         (@get 'dealerHand').playHand()
 
+    # dealer blackjack
+    @get('playerHand').on 'blackjack', =>
+      setTimeout (=> alert("dealer got blackjack! you suck!!")) , 50
 
     #DEALER ENDED EVENT
     @get('dealerHand').on 'turnEnded', =>
-      console.log 'dealer ends'
       if (@get 'dealerHand').isBusted()
         # dealer wins
         @set 'winner', 'player'
@@ -32,7 +36,8 @@ class window.App extends Backbone.Model
       # else compare scores
 
     @on 'change:winner', =>
-      alert "The winner is: #{@get 'winner'} !!!!"
+      setTimeout (=> alert("The winner is: #{@get 'winner'} !!!!")) , 50
+      #trigger game reinit on AppView
 
   compareScores: ->
     if (@get 'playerHand').handScore() > (@get 'dealerHand').handScore()

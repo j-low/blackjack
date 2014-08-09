@@ -1,33 +1,34 @@
 class window.Hand extends Backbone.Collection
 
   model: Card
+  isPlayable: true
 
   initialize: (array, @deck, @isDealer) ->
     if @handScore() is 21 then @trigger 'blackjack', @
 
   isBusted: ->
     if @handScore() > 21
+      @isPlayable = false
       return yes
     no
 
   handScore: ->
     if @scores()[1]? and @scores()[1] < 21
-      # console.log 'handScore called, @scores()[1]: ', @scores()[1]
       return @scores()[1]
     else
-      # console.log 'handScore called, @scores()[0]: ', @scores()[0]
       @scores()[0]
 
   hit: ->
-    hitCard = @add(@deck.pop()).last()
-    if @isBusted()
-      @trigger 'turnEnded', @
-    if @handScore() is 21
-      @trigger 'turnEnded', @
-    hitCard
+    if @isPlayable
+      hitCard = @add(@deck.pop()).last()
+      if @isBusted()
+        @trigger 'turnEnded', @
+      hitCard
 
   stand: ->
-    @trigger 'turnEnded', @
+    if @isPlayable
+      @trigger 'turnEnded', @
+      @isPlayable = false
 
   scores: ->
     # The scores are an array of potential scores.
@@ -45,7 +46,11 @@ class window.Hand extends Backbone.Collection
     @unflip()
     while @handScore() < 17 and not @isBusted()
       @hit()
+    @trigger 'turnEnded', @
+
 
   unflip: ->
     @each (card) ->
       if not card.get ('revealed') then card.flip()
+    if @handScore() is 21 then @trigger 'blackjack', @
+
