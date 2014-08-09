@@ -16,27 +16,34 @@
       this.set('playerHand', deck.dealPlayer());
       this.set('dealerHand', deck.dealDealer());
       this.set('winner', void 0);
+      this.on;
       this.get('playerHand').on('turnEnded', (function(_this) {
         return function() {
-          console.log("turnEnded triggered by received by App model");
           if ((_this.get('playerHand')).isBusted()) {
-            _this.set('winner', 'dealer');
-            if ((_this.get('dealerHand')).isBusted()) {
-              return _this.set('winner', 'player');
-            }
+            return _this.set('winner', 'dealer');
+          } else {
+            return (_this.get('dealerHand')).playHand();
+          }
+        };
+      })(this));
+      this.get('dealerHand').on('turnEnded', (function(_this) {
+        return function() {
+          console.log('dealer ends');
+          if ((_this.get('dealerHand')).isBusted()) {
+            return _this.set('winner', 'player');
           } else {
             return _this.compareScores();
           }
         };
       })(this));
-      this.get('dealerHand').on('turnEnded', function() {});
-      return this.on('change:winner', function() {
-        return alert("The winner is: " + (this.get('winner')) + " !!!!");
-      });
+      return this.on('change:winner', (function(_this) {
+        return function() {
+          return alert("The winner is: " + (_this.get('winner')) + " !!!!");
+        };
+      })(this));
     };
 
     App.prototype.compareScores = function() {
-      console.log('compareScores called');
       if ((this.get('playerHand')).handScore() > (this.get('dealerHand')).handScore()) {
         return this.set('winner', 'player');
       } else {

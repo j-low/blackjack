@@ -15,10 +15,12 @@
     Hand.prototype.initialize = function(array, deck, isDealer) {
       this.deck = deck;
       this.isDealer = isDealer;
+      if (this.handScore() === 21) {
+        return this.trigger('blackjack', this);
+      }
     };
 
     Hand.prototype.isBusted = function() {
-      console.log('isBusted called');
       if (this.handScore() > 21) {
         return true;
       }
@@ -35,21 +37,17 @@
 
     Hand.prototype.hit = function() {
       var hitCard;
-      console.log('hit called');
       hitCard = this.add(this.deck.pop()).last();
       if (this.isBusted()) {
         this.trigger('turnEnded', this);
-        console.log('turnENded called due to bust in hit');
       }
       if (this.handScore() === 21) {
         this.trigger('turnEnded', this);
-        console.log('turnENded called due to 21 in hit');
       }
       return hitCard;
     };
 
     Hand.prototype.stand = function() {
-      console.log('stand called');
       return this.trigger('turnEnded', this);
     };
 
@@ -66,6 +64,24 @@
       } else {
         return [score];
       }
+    };
+
+    Hand.prototype.playHand = function() {
+      var _results;
+      this.unflip();
+      _results = [];
+      while (this.handScore() < 17 && !this.isBusted()) {
+        _results.push(this.hit());
+      }
+      return _results;
+    };
+
+    Hand.prototype.unflip = function() {
+      return this.each(function(card) {
+        if (!card.get('revealed')) {
+          return card.flip();
+        }
+      });
     };
 
     return Hand;

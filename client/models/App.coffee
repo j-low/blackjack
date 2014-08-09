@@ -7,30 +7,34 @@ class window.App extends Backbone.Model
     @set 'dealerHand', deck.dealDealer()
     @set 'winner', undefined
 
+    @on
+
     # PLAYER ENDED EVENT don't forget yo fatty arrows
     @get('playerHand').on 'turnEnded', =>
-      console.log "turnEnded triggered by received by App model"
       # check if player is busted
       if (@get 'playerHand').isBusted()
         # dealer wins
         @set 'winner', 'dealer'
-        # if not, check if dealer busted
-        if (@get 'dealerHand').isBusted()
-          # player wins
-          @set 'winner', 'player'
-      # if neither busted
+      # if not dealer plays
       else
-        # compare scores, determine winner
-        @compareScores()
+        (@get 'dealerHand').playHand()
+
 
     #DEALER ENDED EVENT
-    @get('dealerHand').on 'turnEnded', ->
+    @get('dealerHand').on 'turnEnded', =>
+      console.log 'dealer ends'
+      if (@get 'dealerHand').isBusted()
+        # dealer wins
+        @set 'winner', 'player'
+      else
+        @compareScores()
+      # if dealer busts, player wins
+      # else compare scores
 
-    @on 'change:winner', ->
+    @on 'change:winner', =>
       alert "The winner is: #{@get 'winner'} !!!!"
 
   compareScores: ->
-    console.log 'compareScores called'
     if (@get 'playerHand').handScore() > (@get 'dealerHand').handScore()
       @set 'winner', 'player'
     else

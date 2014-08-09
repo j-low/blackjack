@@ -3,9 +3,9 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
+    if @handScore() is 21 then @trigger 'blackjack', @
 
   isBusted: ->
-    console.log 'isBusted called'
     if @handScore() > 21
       return yes
     no
@@ -19,18 +19,14 @@ class window.Hand extends Backbone.Collection
       @scores()[0]
 
   hit: ->
-    console.log 'hit called'
     hitCard = @add(@deck.pop()).last()
     if @isBusted()
       @trigger 'turnEnded', @
-      console.log 'turnENded called due to bust in hit'
     if @handScore() is 21
       @trigger 'turnEnded', @
-      console.log 'turnENded called due to 21 in hit'
     hitCard
 
   stand: ->
-    console.log 'stand called'
     @trigger 'turnEnded', @
 
   scores: ->
@@ -44,3 +40,12 @@ class window.Hand extends Backbone.Collection
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
     if hasAce then [score, score + 10] else [score]
+
+  playHand: ->
+    @unflip()
+    while @handScore() < 17 and not @isBusted()
+      @hit()
+
+  unflip: ->
+    @each (card) ->
+      if not card.get ('revealed') then card.flip()
