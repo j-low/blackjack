@@ -17,9 +17,13 @@
     Hand.prototype.initialize = function(array, deck, isDealer) {
       this.deck = deck;
       this.isDealer = isDealer;
-      if (this.handScore() === 21) {
-        return this.trigger('blackjack', this);
-      }
+      return setTimeout(((function(_this) {
+        return function() {
+          if (_this.handScore() === 21) {
+            return _this.trigger('blackjack', _this);
+          }
+        };
+      })(this)), 50);
     };
 
     Hand.prototype.isBusted = function() {
@@ -31,7 +35,7 @@
     };
 
     Hand.prototype.handScore = function() {
-      if ((this.scores()[1] != null) && this.scores()[1] < 21) {
+      if ((this.scores()[1] != null) && this.scores()[1] <= 21) {
         return this.scores()[1];
       } else {
         return this.scores()[0];

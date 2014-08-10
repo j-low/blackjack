@@ -19,7 +19,7 @@
       this.get('playerHand').on('blackjack', (function(_this) {
         return function() {
           return setTimeout((function() {
-            return alert("you got blackjack! you're awesome!!");
+            return $(".blink_me").show();
           }), 50);
         };
       })(this));
@@ -32,7 +32,7 @@
           }
         };
       })(this));
-      this.get('playerHand').on('blackjack', (function(_this) {
+      this.get('dealerHand').on('blackjack', (function(_this) {
         return function() {
           return setTimeout((function() {
             return alert("dealer got blackjack! you suck!!");
@@ -64,6 +64,8 @@
         return this.set('winner', 'dealer');
       }
     };
+
+    App.prototype.blackjack = function() {};
 
     return App;
 

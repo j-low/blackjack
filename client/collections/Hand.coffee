@@ -4,7 +4,10 @@ class window.Hand extends Backbone.Collection
   isPlayable: true
 
   initialize: (array, @deck, @isDealer) ->
-    if @handScore() is 21 then @trigger 'blackjack', @
+    setTimeout (=>
+      if @handScore() is 21
+        @trigger 'blackjack', @
+      ), 50
 
   isBusted: ->
     if @handScore() > 21
@@ -13,7 +16,7 @@ class window.Hand extends Backbone.Collection
     no
 
   handScore: ->
-    if @scores()[1]? and @scores()[1] < 21
+    if @scores()[1]? and @scores()[1] <= 21
       return @scores()[1]
     else
       @scores()[0]

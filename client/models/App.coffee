@@ -9,7 +9,7 @@ class window.App extends Backbone.Model
 
     # player blackjack
     @get('playerHand').on 'blackjack', =>
-      setTimeout (=> alert("you got blackjack! you're awesome!!")) , 50
+      setTimeout (=> $(".blink_me").show()) , 50
 
     # PLAYER ENDED EVENT don't forget yo fatty arrows
     @get('playerHand').on 'turnEnded', =>
@@ -22,7 +22,7 @@ class window.App extends Backbone.Model
         (@get 'dealerHand').playHand()
 
     # dealer blackjack
-    @get('playerHand').on 'blackjack', =>
+    @get('dealerHand').on 'blackjack', =>
       setTimeout (=> alert("dealer got blackjack! you suck!!")) , 50
 
     #DEALER ENDED EVENT
@@ -44,5 +44,8 @@ class window.App extends Backbone.Model
       @set 'winner', 'player'
     else
       @set 'winner', 'dealer'
+
+  blackjack: ->
+
 
 
